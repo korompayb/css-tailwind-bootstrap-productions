@@ -1,0 +1,98 @@
+
+
+
+<meta charset="UTF-8" class="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" class="">
+<title class="">Microsoft Bejelentkezés</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" class="">
+<style class="">
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to right, #fee2e2, #dbeafe,  #dcfce7);
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .login-container {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        transition: transform 0.3s ease-in-out;
+    }
+    .login-container.hidden {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    .logo {
+        width: 150px;
+        margin-bottom: 20px;
+    }
+    .qr-container {
+        display: none;
+    }
+    .qr-container img {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+
+
+<div class="/* login-container not found */" id="loginContainer">
+    <img src="https://aadcdn.msftauth.net/shared/1.0/content/images/microsoft_logo_564db913a7fa0ca42727161c6d031bef.svg" alt="Microsoft Logo" class="/* logo not found */">
+    <h1 class="/* fs-4 not found */ /* fw-semibold not found */ mb-2 text-center">Bejelentkezés</h1>
+    <p class="/* fs-6 not found */ text-gray-500 text-center">E-mail, telefon, vagy Skype</p>
+    <input type="text" id="emailInput" class="/* form-control not found */ my-3" placeholder="E-mail, telefon vagy Skype">
+    <button class="btn btn-primary inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm bg-blue-500 hover:bg-blue-700 text-white w-full mb-3" onclick="showPasswordField()">Tovább</button>
+    <div class="flex justify-between mb-2">
+        <a href="#" class="/* text-decoration-none not found */ text-blue-500">Nincs fiókja? Hozzon létre egyet!</a>
+    </div>
+    <div class="flex justify-between mb-4">
+        <a href="#" class="/* text-decoration-none not found */ text-blue-500">Nem tud bejelentkezni a fiókjába?</a>
+    </div>
+    <button class="btn btn-outline-primary items-center justify-center px-4 py-2 text-base font-medium rounded-md shadow-sm /* btn-outline-primary not found */ " onclick="showQRCode()">Bejelentkezés QR-kóddal</button>
+    <div class="/* qr-container not found */" id="qrContainer">
+        <p class="/* fs-6 not found */ text-gray-500">Olvassa be a QR-kódot a bejelentkezéshez</p>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&amp;data=example-login-url" alt="QR Code" class="">
+    </div>
+</div>
+<script class="">
+    function showPasswordField() {
+        let loginContainer = document.getElementById('loginContainer');
+        let emailInput = document.getElementById('emailInput').value;
+        
+        if (emailInput.trim() === "") {
+            alert("Kérjük, adjon meg egy e-mail címet, telefonszámot vagy Skype azonosítót!");
+            return;
+        }
+        
+        loginContainer.classList.add('hidden');
+        setTimeout(() => {
+            loginContainer.innerHTML = `
+                <img src='https://aadcdn.msftauth.net/shared/1.0/content/images/microsoft_logo_564db913a7fa0ca42727161c6d031bef.svg' alt='Microsoft Logo' class='logo'>
+                <h1 class='fs-4 fw-semibold mb-2 text-center'>Adja meg jelszavát</h1>
+                <p class='fs-6 text-secondary text-center'>` + emailInput + `</p>
+                <input type='password' class='form-control my-3' placeholder='Jelszó'>
+                <button class='btn btn-primary w-100 mb-3'>Bejelentkezés</button>
+                <div class='d-flex justify-content-between mb-2'>
+                    <a href='#' class='text-decoration-none text-primary'>Elfelejtette jelszavát?</a>
+                </div>
+            `;
+            loginContainer.classList.remove('hidden');
+        }, 300);
+    }
+    
+    function showQRCode() {
+        document.getElementById('qrContainer').style.display = 'block';
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" class=""></script>
+
+

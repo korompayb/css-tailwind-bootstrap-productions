@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regisztráció</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="Register.css">
+    <link rel="icon" type="image/x-icon" href="../Resources/Images/favicon.png">
+</head>
+<body>
+    <!-- This is for mobile mode -->
+    <div class="form-container mobile">
+        <div class="info-section">
+            <img src="../Resources/Images/banner.svg" alt="logo" style="max-width: 80%;">
+            <div class="ident">
+                Jelszónak tartalmaznia kell:
+                <ul style="text-align: left;">
+                    <li>Legalább egy kisbetűt</li>
+                    <li>Legalább egy nagybetűt</li>
+                    <li>Legalább egy számot</li>
+                    <li>Legalább egy speciális karaktert</li>
+                    <li>Legalább 8 karakter hosszúnak kell lennie</li>
+                </ul>
+            </div>
+                    
+            </p>
+        </div>
+            <hr class="divider">
+            
+            <form id="registerForm" class="Mobile_Mode" method="POST">
+                <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <h2>Regisztráció</h2>
+                </div>
+                
+                <input type="text" name="UName" placeholder="Felhasználónév" required>
+                <input type="email" name="Email" placeholder="Email" required>
+                <input type="password" name="Pass" placeholder="Jelszó" required>
+                <input type="password" name="Pass2" placeholder="Jelszó újra" required>
+                <input type="submit" value="Regisztráció">
+                <p class="response" id="response">Várakozás a Regisztrációra</p>
+                <a href="/login/">Már felhasználó?</a>
+                
+            </form>
+    </div>
+    
+
+    <script>
+        $(document).ready(function() {
+            let AllowEmail = false;
+            $('.Desktop_Mode').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+                $.ajax({
+                    url: 'register.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        switch(response){
+                            case '0':
+                                response = 'Sikertelen kapcsolódás az adatbázishoz!';
+                                break;
+                            case '1':
+                                response = 'Ilyen felhsználónév már létezik!';
+                                break;
+                            case '2':
+                                response = 'A jelszó nem elég erős!';
+                                break;
+                            case '3':
+                                response = 'Nem megfelelő felhasználónév vagy jelszó!';
+                                break;
+                            case '4':
+                                response = 'Sikeres regisztráció!';
+                                AllowEmail = true;
+                                break;
+                            case '5':
+                                response = 'A jelszavak nem egyeznek!';
+                                break;
+                        }
+                        $('#response')(response); // Display the response in the #response div
+                        $('#response').css('display', 'block'); // Display the #response div
+
+                        // Send email if registration was successful
+                        if (AllowEmail) {
+                            $.ajax({
+                                url: 'EmailSender.php',
+                                type: 'POST',
+                                data: $('#registerForm').serialize() + '&EmailOption=1',
+                                success: function(emailResponse) {
+                                }
+                            });
+                        }
+
+                        if(response == '4'){
+                            window.location.href = 'Login';
+                        }
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            let AllowEmail = false;
+            $('.Mobile_Mode').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+                $.ajax({
+                    url: 'register.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        switch(response){
+                            case '0':
+                                response = 'Sikertelen kapcsolódás az adatbázishoz!';
+                                break;
+                            case '1':
+                                response = 'Ilyen felhsználónév már létezik!';
+                                break;
+                            case '2':
+                                response = 'A jelszó nem elég erős!';
+                                break;
+                            case '3':
+                                response = 'Nem megfelelő felhasználónév vagy jelszó!';
+                                break;
+                            case '4':
+                                response = 'Sikeres regisztráció!';
+                                AllowEmail = true;
+                                break;
+                            case '5':
+                                response = 'A jelszavak nem egyeznek!';
+                                break;
+                        }
+                        $('#response')(response); // Display the response in the #response div
+                        $('#response').css('display', 'block'); // Display the #response div
+
+                        // Send email if registration was successful
+                        if (AllowEmail) {
+                            $.ajax({
+                                url: 'EmailSender.php',
+                                type: 'POST',
+                                data: $('#registerForm').serialize() + '&EmailOption=1',
+                                success: function(emailResponse) {
+                                }
+                            });
+                        }
+
+                        if(response == '4'){
+                            window.location.href = 'Login';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

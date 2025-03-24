@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bejelentkezés</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="Register.css">
+    <link rel="icon" type="image/x-icon" href="../Resources/Images/favicon.png">
+    <link rel="manifest" href="../Login/manifest.json">
+    
+</head>
+<body>
+
+    
+
+    <!-- Mobile View -->
+    <div class="form-container mobile">
+        
+        <div class="info-section">
+            <img src="../Resources/Images/banner.svg" style="width: 30%;" alt="logo">
+            <p class="ident">Csatlakozzon ingyenes filmtárhelyünkhöz és élvezze a reklámmentesség élményét velünk! Naponta frissülő adatbázisunkból mostanra több mint 1000 filmet nézhet meg bárhol, bármikor!</p>
+            <div class="box" style="display: flex; align-items: center; gap: 15px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; margin: 10px 0; border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;" onclick="guestLogin()">
+                <svg width="20" height="20" viewBox="0 0 100 100" class="guest-avatar">
+                    <circle cx="50" cy="35" r="25" fill="#808080"/>
+                    <path d="M50 65 C 20 65 10 95 10 100 L 90 100 C 90 95 80 65 50 65" fill="#808080"/>
+                </svg>
+                <a style="font-size: 16px; color: #fff;">Folytatás Vendégként</a>
+            </div>
+        </div>
+        <hr class="divider">
+        <form id="registerForm" class="Mobile_Mode" method="POST">
+            <div style="display: flex; flex-direction: row; gap: 10px;">
+                <h2>Bejelentkezés:</h2>
+                
+            </div>
+            <input type="text" name="UName" placeholder="Felhasználónév" required>
+            <input type="password" name="Pass" placeholder="Jelszó" required>
+            <input type="submit" value="Bejelentkezés">
+            <p class="response" id="response">Várakozás a Bejelentkezésre</p>
+            <a href="register">Még nem tag?</a>
+        </form>
+        
+    </div>
+
+    <script>
+        function guestLogin() {
+            $.ajax({
+                url: 'login.php',
+                type: 'POST',
+                data: {
+                    UName: 'Vendeg',
+                    Pass: 'Vendeg123@'
+                },
+                success: function(response) {
+                    switch(response) {
+                        case "0":
+                            document.getElementById("response").innerHTML = "Adatbázis kapcsolódási hiba!";
+                            break;
+                        case "1":
+                            document.getElementById("response").innerHTML = "A felhasználó nem létezik!";
+                            break;
+                        case "2":
+                            document.getElementById("response").innerHTML = "Helytelen jelszó!";
+                            break;
+                        case "3":
+                            document.getElementById("response").innerHTML = "Üres mezők!";
+                            break;
+                        case "4":
+                            window.location.href = "../";
+                            break;
+                    }
+                },
+                error: function() {
+                    document.getElementById("response").innerHTML = "Szerver hiba!";
+                }
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.Mobile_Mode').on('submit', function(event) {
+                event.preventDefault(); // Prevent the form from submitting the traditional way
+
+                $.ajax({
+                    url: 'Login.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        switch(response){
+                            case '0':
+                                response = 'Sikertelen kapcsolódás az adatbázishoz!';
+                                break;
+                            case '1':
+                                response = 'Nincs ilyen felhasználó!';
+                                break;
+                            case '2':
+                                response = 'Hibás felhasználónév vagy jelszó!';
+                                break;
+                            case '3':
+                                response = 'Nem megfelelő jelszó!';
+                                break;
+                            case '4':
+                                response = 'Sikeres belépés!';
+                                break;
+                        }
+                        $('#response').text(response); // Display the response in the #response div
+                        $('#response').css('display', 'block'); // Display the #response div
+
+                        if(response == 'Sikeres belépés!'){
+                            // window.location.href = '../index';
+                            window.location.href = '../tools/Subprofiles/Alprofilok';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+        }
+
+        $(document).ready(function() {
+            $('.Mobile_Mode').on('submit', function(event) {
+                const username = $('input[name="UName"]').val();
+                if (response == 'Sikeres belépés!') {
+                    setCookie('loggedInUser', username, 30); // Store for 30 days
+                }
+            });
+        });
+    </script>
+</body>
+</html>
